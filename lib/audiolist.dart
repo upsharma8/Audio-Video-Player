@@ -47,6 +47,19 @@ class ListAudio extends StatelessWidget {
             );
           }),
       RaisedButton(
+          child: Text("Zindagi"),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CacheAudio(
+                  audiourl: 'audios/newsong.mp3',
+                  imageurl: 'images/zindagi.jpg',
+                ),
+              ),
+            );
+          }),
+      RaisedButton(
           child: Text("Song 1"),
           onPressed: () {
             a();

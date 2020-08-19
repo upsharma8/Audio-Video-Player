@@ -2,9 +2,6 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class CacheAudio extends StatefulWidget {
   final audiourl;
@@ -14,24 +11,14 @@ class CacheAudio extends StatefulWidget {
 }
 
 class StateAudio extends State<CacheAudio> {
-  String mp3Uri = '';
-  AudioPlayer player = AudioPlayer();
-  void _playSound() {
-    player.play(mp3Uri);
-    //
-  }
-
-  void _loadSound() async {
-    final ByteData data = await rootBundle.load(widget.audiourl);
-    Directory tempDir = await getTemporaryDirectory();
-    File tempFile = File('${tempDir.path}/Despacito.mp3');
-    await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    mp3Uri = tempFile.uri.toString();
-  }
+  AudioPlayer play;
+  AudioCache player;
 
   void initState() {
+    play = new AudioPlayer();
+    player = new AudioCache(fixedPlayer: play);
+
     super.initState();
-    _loadSound();
   }
 
   @override
@@ -39,7 +26,7 @@ class StateAudio extends State<CacheAudio> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Music Plaer"),
+          title: Text("Music Player"),
           centerTitle: true,
           actions: [Icon(Icons.more_vert)],
         ),
@@ -63,11 +50,11 @@ class StateAudio extends State<CacheAudio> {
                 children: [
                   IconButton(
                       icon: Icon(Icons.play_arrow),
-                      onPressed: () => _playSound()),
+                      onPressed: () => player.play(widget.audiourl)),
                   IconButton(
-                      icon: Icon(Icons.pause), onPressed: () => player.pause()),
+                      icon: Icon(Icons.pause), onPressed: () => play.pause()),
                   IconButton(
-                      icon: Icon(Icons.stop), onPressed: () => player.stop()),
+                      icon: Icon(Icons.stop), onPressed: () => play.stop()),
                 ],
               ),
             ),
